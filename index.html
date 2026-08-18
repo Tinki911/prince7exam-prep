@@ -1,9 +1,123 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#17243a"><title>PrincePrep v2</title><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css"></head><body><div class="app"><header><div><small>PRINCE2 7 FOUNDATION</small><h1>PrincePrep <em>v2.1</em></h1></div><button onclick="show('settings')">⚙</button></header><main>
-<section id="home" class="screen active"><div class="hero"><div><span>FOUNDATION</span><h2 id="countdown">Set your exam date</h2><p id="countsub">Your revision plan will adapt as the date approaches.</p></div><div class="ring"><b id="ready">0%</b><small>ready</small></div></div><div class="card"><div class="row"><div><small>TODAY'S MISSION</small><h3 id="mission">Build your baseline</h3></div><b id="streak">🔥 0</b></div><button class="primary" onclick="startAdaptive(12)">Start today's revision</button></div><div class="stats"><div><b id="answered">0</b><span>answered</span></div><div><b id="accuracy">—</b><span>accuracy</span></div><div><b id="bestmock">—</b><span>best mock</span></div></div><div class="card"><small>REVISION COMMAND CENTRE</small><h3>Choose a mode</h3><div class="grid"><button onclick="startRescue()">🚨 <b>Rescue Mode</b><span>Attack weakest topics</span></button><button onclick="showVault()">❌ <b>Wrong Answer Vault</b><span id="wrongcount">0 mistakes</span></button><button onclick="showFlash()">🃏 <b>Flashcards</b><span>Active recall</span></button><button onclick="startMock()">⏱ <b>Full Mock</b><span>60 Q · 60 min</span></button><button onclick="startAdaptive(5)">⚡ <b>Just Give Me 5</b><span>Quick momentum</span></button><button onclick="show('learn')">📘 <b>Learn</b><span>Topic map</span></button></div></div><div class="card"><small>WEAKEST AREAS</small><div id="weak"></div></div><p class="note">Independent practice tool. Original revision questions; not official PeopleCert exam questions.</p></section>
-<section id="learn" class="screen"><div class="head"><button onclick="show('home')">←</button><div><small>LEARN</small><h2>Revision map</h2></div></div><div id="topics"></div></section>
-<section id="quiz" class="screen"><div class="head"><button onclick="quitQuiz()">←</button><div><small id="qmode">PRACTICE</small><h2 id="qtitle">Question trainer</h2></div><b id="timer"></b></div><div id="quizbox"></div></section>
-<section id="flash" class="screen"><div class="head"><button onclick="show('home')">←</button><div><small>FLASHCARDS</small><h2>Active recall</h2></div></div><div id="flashbox"></div></section>
-<section id="vault" class="screen"><div class="head"><button onclick="show('home')">←</button><div><small>WRONG ANSWER VAULT</small><h2>Turn mistakes into marks</h2></div></div><div id="vaultbox"></div></section>
-<section id="progress" class="screen"><div class="head"><button onclick="show('home')">←</button><div><small>PROGRESS</small><h2>Your mastery</h2></div></div><div class="stats"><div><b id="panswered">0</b><span>answered</span></div><div><b id="pcorrect">0</b><span>correct</span></div><div><b id="pmocks">0</b><span>mocks</span></div></div><div class="card"><small>TOPIC MASTERY</small><div id="mastery"></div></div><div class="card"><small>RECENT MOCKS</small><div id="mockhistory"></div></div></section>
-<section id="settings" class="screen"><div class="head"><button onclick="show('home')">←</button><div><small>SETTINGS</small><h2>Exam setup</h2></div></div><div class="card form"><label>Foundation exam date<input id="examdate" type="date"></label><button class="primary" onclick="saveExamDate()">Save exam date</button></div><div class="card"><h3>Question bank</h3><p><b>228 original practice questions</b> across <b>76 PRINCE2 7 concepts</b>.</p><p class="muted">Progress is stored locally on this device/browser.</p><button class="danger" onclick="resetAll()">Reset progress</button></div></section>
-</main><nav><button onclick="show('home')">⌂<span>Home</span></button><button onclick="show('learn')">▤<span>Learn</span></button><button onclick="startAdaptive(10)">?<span>Quiz</span></button><button onclick="startMock()">◷<span>Mock</span></button><button onclick="show('progress')">↗<span>Progress</span></button></nav></div><script src="data-v21.js"></script><script src="app-v21.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#17243a">
+  <title>PrincePrep v2.1.1</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+<header>
+  <div>
+    <small>PRINCE2 7 FOUNDATION</small>
+    <h1>PrincePrep <em>v2.1.1</em></h1>
+  </div>
+  <button aria-label="Settings" onclick="show('settings')">⚙</button>
+</header>
+
+<main>
+<section id="home" class="screen active">
+  <div class="hero exam-date-hero" onclick="show('settings')" role="button" tabindex="0">
+    <div>
+      <span>FOUNDATION</span>
+      <h2 id="countdown">Set your exam date</h2>
+      <p id="countsub">Tap here to set your exam date and activate your countdown.</p>
+      <small class="tap-hint">Tap to edit exam date →</small>
+    </div>
+    <div class="ring"><b id="ready">0%</b><small>ready</small></div>
+  </div>
+
+  <div class="card mission-card">
+    <div class="row">
+      <div><small>TODAY'S MISSION</small><h3 id="mission">Build your baseline</h3></div>
+      <b id="streak">🔥 0</b>
+    </div>
+    <button class="primary" onclick="startAdaptive(12)">Start today's revision</button>
+  </div>
+
+  <div class="stats">
+    <div><b id="answered">0</b><span>answered</span></div>
+    <div><b id="accuracy">—</b><span>accuracy</span></div>
+    <div><b id="bestmock">—</b><span>best mock</span></div>
+  </div>
+
+  <div class="card command-card">
+    <small>REVISION COMMAND CENTRE</small>
+    <h3>Choose a mode</h3>
+    <div class="grid">
+      <button onclick="startRescue()">🚨 <b>Rescue Mode</b><span>Attack weakest topics</span></button>
+      <button onclick="showVault()">❌ <b>Wrong Answer Vault</b><span id="wrongcount">0 mistakes</span></button>
+      <button onclick="showFlash()">🃏 <b>Flashcards</b><span>Active recall</span></button>
+      <button onclick="startMock()">⏱ <b>Full Mock</b><span>60 Q · 60 min</span></button>
+      <button onclick="startAdaptive(5)">⚡ <b>Just Give Me 5</b><span>Quick momentum</span></button>
+      <button onclick="show('learn')">📘 <b>Learn</b><span>Key learning points</span></button>
+    </div>
+  </div>
+
+  <div class="card"><small>WEAKEST AREAS</small><div id="weak"></div></div>
+  <p class="note">Independent PRINCE2 7 revision tool using original exam-style practice questions.</p>
+</section>
+
+<section id="learn" class="screen">
+  <div class="head"><button onclick="show('home')">←</button><div><small>LEARN</small><h2>Revision map</h2></div></div>
+  <div id="topics"></div>
+</section>
+
+<section id="quiz" class="screen">
+  <div class="head"><button onclick="quitQuiz()">←</button><div><small id="qmode">PRACTICE</small><h2 id="qtitle">Question trainer</h2></div><b id="timer"></b></div>
+  <div id="quizbox"></div>
+</section>
+
+<section id="flash" class="screen">
+  <div class="head"><button onclick="show('home')">←</button><div><small>FLASHCARDS</small><h2>Active recall</h2></div></div>
+  <div id="flashbox"></div>
+</section>
+
+<section id="vault" class="screen">
+  <div class="head"><button onclick="show('home')">←</button><div><small>WRONG ANSWER VAULT</small><h2>Turn mistakes into marks</h2></div></div>
+  <div id="vaultbox"></div>
+</section>
+
+<section id="progress" class="screen">
+  <div class="head"><button onclick="show('home')">←</button><div><small>PROGRESS</small><h2>Your mastery</h2></div></div>
+  <div class="stats">
+    <div><b id="panswered">0</b><span>answered</span></div>
+    <div><b id="pcorrect">0</b><span>correct</span></div>
+    <div><b id="pmocks">0</b><span>mocks</span></div>
+  </div>
+  <div class="card"><small>TOPIC MASTERY</small><div id="mastery"></div></div>
+  <div class="card"><small>RECENT MOCKS</small><div id="mockhistory"></div></div>
+</section>
+
+<section id="settings" class="screen">
+  <div class="head"><button onclick="show('home')">←</button><div><small>SETTINGS</small><h2>Exam setup</h2></div></div>
+  <div class="card form">
+    <label>Foundation exam date<input id="examdate" type="date"></label>
+    <button class="primary" onclick="saveExamDate()">Save exam date</button>
+  </div>
+  <div class="card">
+    <h3>PrincePrep v2.1.1</h3>
+    <p><b>Exam-style practice + key learning points</b></p>
+    <p class="muted">Progress is stored locally on this device/browser.</p>
+    <button class="danger" onclick="resetAll()">Reset progress</button>
+  </div>
+</section>
+</main>
+
+<nav>
+  <button onclick="show('home')">⌂<span>Home</span></button>
+  <button onclick="show('learn')">▤<span>Learn</span></button>
+  <button onclick="startAdaptive(10)">?<span>Quiz</span></button>
+  <button onclick="startMock()">◷<span>Mock</span></button>
+  <button onclick="show('progress')">↗<span>Progress</span></button>
+</nav>
+</div>
+
+<!-- IMPORTANT: v2.1 files already in the repo -->
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
