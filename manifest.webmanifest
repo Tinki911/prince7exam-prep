@@ -1,0 +1,8 @@
+{
+  "name": "PrincePrep v2 \u2014 PRINCE2 7 Foundation",
+  "short_name": "PrincePrep",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f9",
+  "theme_color": "#17243a"
+}
