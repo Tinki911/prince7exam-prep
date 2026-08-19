@@ -5,7 +5,7 @@ const LRN=window.PP_LEARNING||{modules:[],flashcards:[]};
 const TOP=[...new Set(Q.map(x=>x.topic))],KEY='princeprep_v22';
 let S=load(),SES=null,TICK=null,FC=[],FI=0,FLIP=false;
 
-function blank(){return{answered:0,correct:0,topics:{},wrong:{},mocks:[],examDate:'',study:[],seen:{},flash:{},official:{}}}
+function blank(){return{answered:0,correct:0,topics:{},wrong:{},mocks:[],examDate:'',study:[],seen:{},flash:{},official:{},game:{xp:0,lastDay:'',best:0,plays:0}}}
 function load(){try{return Object.assign(blank(),JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){return blank()}}
 function save(){localStorage.setItem(KEY,JSON.stringify(S))}
 function sh(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -19,7 +19,7 @@ function streakN(){let n=0,d=new Date();while(S.study.includes(d.toISOString().s
 function show(id){
  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
  let el=document.getElementById(id); if(el)el.classList.add('active');
- if(id==='home')home(); if(id==='learn')learn(); if(id==='progress')progress(); if(id==='mockhub')mockHub();
+ if(id==='home')home(); if(id==='learn')learn(); if(id==='progress')progress(); if(id==='mockhub')mockHub(); if(id==='play')playHome();
  if(id==='settings')examdate.value=S.examDate||'';
  scrollTo(0,0)
 }
@@ -106,4 +106,23 @@ function progress(){
 }
 function saveExamDate(){S.examDate=examdate.value;save();show('home')}
 function resetAll(){if(confirm('Reset all PrincePrep progress on this device?')){S=blank();save();show('home')}}
+
+const GAME=window.PP_GAME||{};let G=null;
+function gameState(){S.game=S.game||{xp:0,lastDay:'',best:0,plays:0};return S.game}
+function playHome(){let g=gameState();playxp.textContent=(g.xp||0)+' XP';gamestars.textContent=g.best>=90?'★★★':g.best>=70?'★★☆':g.best>=40?'★☆☆':'☆☆☆';dailytitle.textContent=g.lastDay===new Date().toISOString().slice(0,10)?'Daily crisis completed — replay or try another game':'Your project needs rescuing';gamebox.innerHTML='<div class="game-tip"><b>PrincePlay feeds your revision:</b> game answers update the same topic mastery used by Rescue Mode and Progress.</div>'}
+function gameCredit(topic,ok,points=10){let g=gameState();g.plays++;if(ok)g.xp+=points;if(topic){S.topics[topic]=S.topics[topic]||{a:0,c:0};S.topics[topic].a++;if(ok)S.topics[topic].c++}S.answered++;if(ok)S.correct++;mark();save();playxp.textContent=g.xp+' XP'}
+function gameResult(title,c,total){let pct=pc(c,total),g=gameState();g.best=Math.max(g.best||0,pct);save();let stars=pct>=90?'★★★':pct>=70?'★★☆':pct>=40?'★☆☆':'☆☆☆';gamebox.innerHTML=`<div class="game-result"><div class="big-stars">${stars}</div><h3>${title}</h3><div class="game-score">${c}/${total}</div><p>${pct}%</p><button class="primary" onclick="playHome()">Choose another game</button></div>`;gamestars.textContent=stars}
+function startDailyGame(){G={i:0,c:0,items:GAME.dailyCrisis||[]};renderDaily()}
+function renderDaily(){let q=G.items[G.i];gamebox.innerHTML=`<div class="game-card"><div class="game-progress"><i style="width:${100*G.i/G.items.length}%"></i></div><small>PROJECT RESCUE · ROUND ${G.i+1}/${G.items.length}</small><h3>${esc(q.title)}</h3><p class="scenario">${esc(q.scenario)}</p><div class="game-options">${q.options.map((o,i)=>`<button data-i="${i}">${esc(o)}</button>`).join('')}</div><div id="gamefeedback"></div></div>`;gamebox.querySelectorAll('.game-options button').forEach(b=>b.addEventListener('click',()=>dailyAnswer(+b.dataset.i)))}
+function dailyAnswer(i){let q=G.items[G.i],ok=i===q.answer;if(ok)G.c++;gameCredit(q.topic,ok,15);gamebox.querySelectorAll('.game-options button').forEach((b,j)=>{b.disabled=true;if(j===q.answer)b.classList.add('good');if(j===i&&!ok)b.classList.add('bad')});gamefeedback.innerHTML=`<div class="game-feedback ${ok?'good':'bad'}"><b>${ok?'Project stabilized ✓':'Project takes a hit'}</b><p>${esc(q.learning)}</p></div><button class="next" id="gNext">${G.i===G.items.length-1?'Finish rescue':'Next crisis'}</button>`;document.getElementById('gNext').addEventListener('click',()=>{G.i++;if(G.i>=G.items.length){gameState().lastDay=new Date().toISOString().slice(0,10);save();gameResult('Project Rescue',G.c,G.items.length)}else renderDaily()})}
+function startRoleRush(){G={i:0,c:0,items:sh(GAME.roleRush||[])};renderRole()}
+function renderRole(){let q=G.items[G.i],opts=sh(q.options);gamebox.innerHTML=`<div class="game-card"><small>ROLE RUSH · ${G.i+1}/${G.items.length}</small><h3>Who am I?</h3><p class="scenario">${esc(q.prompt)}</p><div class="role-options">${opts.map(o=>`<button data-v="${esc(o)}">${esc(o)}</button>`).join('')}</div></div>`;gamebox.querySelectorAll('.role-options button').forEach(b=>b.addEventListener('click',()=>{let ok=b.dataset.v===q.answer;if(ok)G.c++;gameCredit(q.topic,ok,10);b.classList.add(ok?'good':'bad');setTimeout(()=>{G.i++;G.i>=G.items.length?gameResult('Role Rush',G.c,G.items.length):renderRole()},550)}))}
+function startRiskIssue(){G={i:0,c:0,items:sh(GAME.riskIssue||[])};renderRiskIssue()}
+function renderRiskIssue(){let q=G.items[G.i];gamebox.innerHTML=`<div class="game-card center-game"><small>RISK OR ISSUE? · ${G.i+1}/${G.items.length}</small><p class="scenario big">${esc(q.statement)}</p><div class="binary"><button data-v="Risk">⚠️ RISK</button><button data-v="Issue">🛠️ ISSUE</button></div><div id="gamefeedback"></div></div>`;gamebox.querySelectorAll('.binary button').forEach(b=>b.addEventListener('click',()=>{let ok=b.dataset.v===q.answer;if(ok)G.c++;gameCredit(q.topic,ok,10);gamefeedback.innerHTML=`<div class="game-feedback ${ok?'good':'bad'}"><b>${ok?'Nice ✓':'Watch the distinction'}</b><p>${esc(q.why)}</p></div>`;setTimeout(()=>{G.i++;G.i>=G.items.length?gameResult('Risk or Issue?',G.c,G.items.length):renderRiskIssue()},850)}))}
+function startTolerance(){G={i:0,c:0,items:sh(GAME.tolerance||[])};renderTolerance()}
+function renderTolerance(){let q=G.items[G.i];gamebox.innerHTML=`<div class="game-card center-game"><small>TOLERANCE TROUBLE · ${G.i+1}/${G.items.length}</small><p class="scenario big">${esc(q.scenario)}</p><div class="binary"><button data-v="MANAGE">✅ MANAGE</button><button data-v="ESCALATE">🚨 ESCALATE</button></div><div id="gamefeedback"></div></div>`;gamebox.querySelectorAll('.binary button').forEach(b=>b.addEventListener('click',()=>{let ok=b.dataset.v===q.answer;if(ok)G.c++;gameCredit(q.topic,ok,12);gamefeedback.innerHTML=`<div class="game-feedback ${ok?'good':'bad'}"><b>${ok?'Good call ✓':'That would weaken control'}</b><p>${esc(q.why)}</p></div>`;setTimeout(()=>{G.i++;G.i>=G.items.length?gameResult('Tolerance Trouble',G.c,G.items.length):renderTolerance()},850)}))}
+function startProcessPath(){G={target:GAME.processPath||[],order:sh(GAME.processPath||[]),chosen:[]};renderProcessPath()}
+function renderProcessPath(){gamebox.innerHTML=`<div class="game-card"><small>PROCESS PATH</small><h3>Build the PRINCE2 journey</h3><p class="muted">Tap the processes in lifecycle order.</p><div id="pathChosen" class="path-chosen"></div><div id="pathPool" class="path-pool">${G.order.map((x,i)=>`<button data-i="${i}">${esc(x)}</button>`).join('')}</div><div id="gamefeedback"></div></div>`;gamebox.querySelectorAll('#pathPool button').forEach(b=>b.addEventListener('click',()=>pathPick(b)))}
+function pathPick(btn){let val=G.order[+btn.dataset.i];if(btn.disabled)return;btn.disabled=true;G.chosen.push(val);pathChosen.innerHTML=G.chosen.map((x,i)=>`<span>${i+1}. ${esc(x)}</span>`).join('');if(G.chosen.length===G.target.length){let ok=G.chosen.every((x,i)=>x===G.target[i]);gameCredit('Processes',ok,ok?25:0);if(ok)gameResult('Process Path',1,1);else{gamefeedback.innerHTML=`<div class="game-feedback bad"><b>Almost — rebuild the journey</b><p>${G.target.map(esc).join(' → ')}</p></div><button class="next" id="retryPath">Try again</button>`;document.getElementById('retryPath').addEventListener('click',startProcessPath)}}}
+
 home();
