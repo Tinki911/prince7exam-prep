@@ -1,0 +1,22 @@
+/* PrincePrep v2.4.1 — evening-friendly dark theme */
+:root[data-theme="dark"]{--bg:#0f151e;--card:#18212d;--ink:#e8edf3;--muted:#9ba8b8;--blue:#6f9fd0;--teal:#55c7b8;--line:#2a3645;--good:#79c795;--bad:#e18b8b;--shadow:0 10px 30px rgba(0,0,0,.22);color-scheme:dark}
+:root[data-theme="dark"] body{background:var(--bg);color:var(--ink)}
+:root[data-theme="dark"] header button,:root[data-theme="dark"] .head button{background:#202b38;color:var(--ink)}
+:root[data-theme="dark"] header em{background:#25374b;color:#cfe1f5}
+:root[data-theme="dark"] .card,:root[data-theme="dark"] .paper-card,:root[data-theme="dark"] .learn-card,:root[data-theme="dark"] .weight-card,:root[data-theme="dark"] .stats div,:root[data-theme="dark"] .topic,:root[data-theme="dark"] .qcard,:root[data-theme="dark"] .flashcard,:root[data-theme="dark"] .vaultitem,:root[data-theme="dark"] .game-card,:root[data-theme="dark"] .game-result,:root[data-theme="dark"] .lesson-panel,:root[data-theme="dark"] .lesson-complete,:root[data-theme="dark"] .journey-card{background:var(--card);color:var(--ink)}
+:root[data-theme="dark"] .grid button,:root[data-theme="dark"] .game-grid button,:root[data-theme="dark"] .game-options button,:root[data-theme="dark"] .role-options button,:root[data-theme="dark"] .binary button,:root[data-theme="dark"] .path-pool button,:root[data-theme="dark"] .reveal-stack button,:root[data-theme="dark"] .lesson-options button,:root[data-theme="dark"] .option{background:#1d2835;color:var(--ink);border-color:var(--line)}
+:root[data-theme="dark"] .grid button.officialbtn,:root[data-theme="dark"] .playbtn{background:linear-gradient(135deg,#1c3435,#213249)!important;border-color:#34515b!important}
+:root[data-theme="dark"] .hero,:root[data-theme="dark"] .game-hero,:root[data-theme="dark"] .learn-intro,:root[data-theme="dark"] .lesson-hero,:root[data-theme="dark"] .exam-banner,:root[data-theme="dark"] .memory{background:linear-gradient(135deg,#111a26,#1e3852)}
+:root[data-theme="dark"] .bar,:root[data-theme="dark"] .weightbar,:root[data-theme="dark"] .qprogress,:root[data-theme="dark"] .game-progress{background:#283443}
+:root[data-theme="dark"] .letter,:root[data-theme="dark"] .visual-strip span,:root[data-theme="dark"] .concept-node b,:root[data-theme="dark"] .flow-map button{background:#243344;color:var(--ink);border-color:#34495e}
+:root[data-theme="dark"] .flow-map button.lit,:root[data-theme="dark"] .path-chosen span,:root[data-theme="dark"] .game-tip,:root[data-theme="dark"] .learn-icon{background:#183a38;color:#d9f5ef}
+:root[data-theme="dark"] .exam-lens{background:#3a3020;color:#f4e8c9}
+:root[data-theme="dark"] .secondary{background:#26384c;color:#cfe2f6}
+:root[data-theme="dark"] .danger{background:#3a2428;color:#f0a7a7}
+:root[data-theme="dark"] .option.good,:root[data-theme="dark"] .feedback.good,:root[data-theme="dark"] .game-feedback.good,:root[data-theme="dark"] .lesson-options button.good,:root[data-theme="dark"] .game-options button.good,:root[data-theme="dark"] .role-options button.good{background:#193426;border-color:#4f8e66;color:#e4f5e9}
+:root[data-theme="dark"] .option.bad,:root[data-theme="dark"] .feedback.bad,:root[data-theme="dark"] .game-feedback.bad,:root[data-theme="dark"] .lesson-options button.bad,:root[data-theme="dark"] .game-options button.bad,:root[data-theme="dark"] .role-options button.bad{background:#3a2327;border-color:#91565d;color:#f6dddd}
+:root[data-theme="dark"] .again{background:#3a2327;color:#f3dada}:root[data-theme="dark"] .hard{background:#3a311f;color:#f5e6bd}:root[data-theme="dark"] .got{background:#193426;color:#dff3e5}
+:root[data-theme="dark"] nav{background:rgba(16,23,33,.94);border-color:var(--line)}
+:root[data-theme="dark"] nav button{color:#aeb9c7}
+:root[data-theme="dark"] input{background:#111923!important;color:var(--ink);border-color:var(--line)!important}
+.theme-toggle{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);border-radius:14px;padding:13px 16px;font-weight:800;background:var(--card);color:var(--ink);margin-top:10px}
